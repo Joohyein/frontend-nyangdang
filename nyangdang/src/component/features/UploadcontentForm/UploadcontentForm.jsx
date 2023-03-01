@@ -13,12 +13,8 @@ function UploadcontentForm() {
 
   const onChangeImgInputHandler = (e) => {
     const img = e.target.files[0];
-    // console.log('img :', img);
-    const formData = new FormData();
-    formData.append('image', img);
-    // console.log(formData);
     // for (const keyValue of formData) console.log(keyValue);
-    setImage(formData);
+    setImage(img);
     // console.log(formData.get('image'));
   }
 
@@ -37,19 +33,24 @@ function UploadcontentForm() {
       title,
       contents,
     }
+    const formData = new FormData(); // image file을 받을 때 type (기본타입이 multipart/)
+    formData.append('image', image);
+
     // console.log("body: ", body);
     const json = JSON.stringify(body);
     // console.log("json", json);
-    const requestDto = new Blob([json], { type: 'application/json' });
+    const requestDto = new Blob([json], { type: 'application/json' });  // json 으로 만들어 주기 위한 것
     // console.log("blob", blob);
-    // image.append('requestDto', blob);
-    console.log("image", ...image);
+    formData.append('requestDto', requestDto);
+    // console.log("image", ...image);
     // formDataImg.append("title", JSON.stringify(title));
     // formDataImg.append("contents", JSON.stringify(contents));
-    console.log("formDataImg: ", image.get("image"));
     // console.log("formDataImg: ", image.get("requestDto"));
+    console.log(formData.get('image'));
+    console.log(formData.get('requestDto'));
+
     instance.post('/api/blogs', 
-    {image, requestDto},
+    formData,
     {headers: {"Content-Type":"multipart/form-data"}}
     )
 
